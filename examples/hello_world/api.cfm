@@ -7,8 +7,5 @@
 <powernap:endpoints 
 	name="HelloWorldAPI"
 	engine="powernap.examples.hello_world.HelloWorld"
-	coldspring="/powernap/examples/hello_world/coldspring-config.xml"
 	reload="true"
-	reload_key="reload"
-	reload_value="reloadme"
 	debug="true" />
