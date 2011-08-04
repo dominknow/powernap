@@ -22,12 +22,12 @@
 	<!--- //
 		Initialize default supported representation formats;
 	// --->
-	<cfset format().withExtension(".txt").willRespondWith("text/plain").calls("getAsPlainText") />
-	<cfset format().withExtension(".xml").willRespondWith("application/xml").calls("getAsXML") />
-	<cfset format().withExtension(".html").willRespondWith("text/html").calls("getAsHTML") />
-	<cfset format().withExtension(".htm").willRespondWith("text/html").calls("getAsHTML") />
-	<cfset format().withExtension(".json").willRespondWith("application/json").calls("getAsJSON") />
-	<cfset format().withExtension(".pdf").willRespondWith("application/pdf").calls("getAsPDF") />
+	<cfset format().withExtension(".txt").willRespondWith("text/plain; charset=UTF-8").calls("getAsPlainText") />
+	<cfset format().withExtension(".xml").willRespondWith("application/xml; charset=UTF-8").calls("getAsXML") />
+	<cfset format().withExtension(".html").willRespondWith("text/html; charset=UTF-8").calls("getAsHTML") />
+	<cfset format().withExtension(".htm").willRespondWith("text/html; charset=UTF-8").calls("getAsHTML") />
+	<cfset format().withExtension(".json").willRespondWith("application/json; charset=UTF-8").calls("getAsJSON") />
+	<cfset format().withExtension(".pdf").willRespondWith("application/pdf; charset=UTF-8").calls("getAsPDF") />
 
 	<cffunction name="init" access="public" returntype="powernap.core.Engine">
 		
