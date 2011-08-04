@@ -100,6 +100,7 @@
 		<cfset var params = "" />
 		<cfset var representation = "" />
 		<cfset var runtimeResource = "" />
+
 		
 		<!--- //
 			Grab a RuntimeResource based on both the http_method and path_info.
@@ -116,7 +117,8 @@
 		<cfif not runtimeResource.hasResourceReference()>
 			<cfheader statuscode="404" statustext="Not Found" />
 			<cfsetting showdebugoutput="false" />
-			<cfexit />
+			<cfreturn "Not found here" />
+		<cfelse>
 		</cfif>
 		
 		<!--- //
@@ -130,6 +132,7 @@
 				IF authentication was successful.  Otherwise, it will be an empty string.
 			// --->
 			<cfset params["auth_username"] = authenticate(runtimeResource.getResourceReference()) />
+		<cfelse>
 		</cfif>
 		
 		<!--- //
@@ -232,7 +235,10 @@
 		<cfargument name="resource" type="powernap.core.RuntimeResource" required="true">
 
 		<cfset var representation = false />
-		<cfset var targetComponent = arguments.resource.getResourceReference().getTargetComponent() />
+		<cfset var targetComponent = "" />
+		<cfset var resourceReference = "" />
+		<cfset resourceReference = arguments.resource.getResourceReference() />
+		<cfset targetComponent = resourceReference.getTargetComponent() />
 		
 		<cfif hasBeanFactory() and getBeanFactory().containsBean(targetComponent)>
 			<cfset targetComponent = getBeanFactory().getBean(targetComponent) />
@@ -290,10 +296,12 @@
 				 configure both as defaults to support both mechanisms or leave it up to user configuration.
 			  // --->
 		<cfloop list="#arguments.extension#" index="type">
+			<cflog file="powernap" text="Checking #type#" />
 			<!--- // Accept headers can have a preference specified in a format like: 
 					 Accept: text/html; q=1.0, text/*; q=0.8, image/gif; q=0.6, image/jpeg; q=0.6, image/*; q=0.5, */*; q=0.1 
 				  // --->
 			<cfif structKeyExists(variables.formatRegistry, listFirst(type, ";"))>
+				<cflog file="powernap" text="Found #type# for #arguments.extension#" />
 				<cfreturn variables.formatRegistry[arguments.extension] />
 			</cfif>
 		</cfloop>
@@ -381,8 +389,18 @@
 			The 'content' provided by a representation is what needs to be
 			sent back to the requesting client.
 		// --->
-		<cfset var format = getFormatFromExtension(runtimeResource.getRequestedFormat()) />
-		<cfset var content = getContent(representation, format) />
+		<cfset var format = "" />
+		<cfset var content = "" />
+
+		<cflog file="powernap" text="Rendering" />
+		<cftry>
+			<cfset format = getFormatFromExtension(runtimeResource.getRequestedFormat()) />
+			<cfset content = getContent(representation, format) />
+			<cfcatch type="any">
+				<cflog file="powernap" text="Error! #cfcatch.message#" />
+				<cfrethrow />
+			</cfcatch>
+		</cftry>
 		
 		<!--- //
 			Ensure the response headers respond correctly to what
