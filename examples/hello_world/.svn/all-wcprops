@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/dkiDev/!svn/ver/1190/LCMS_harmony/Codebase/trunk/frameworks/powernap/examples/hello_world
+END
+World.cfc
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/dkiDev/!svn/ver/1190/LCMS_harmony/Codebase/trunk/frameworks/powernap/examples/hello_world/World.cfc
+END
+ProtectedWorldResource.cfc
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/dkiDev/!svn/ver/1190/LCMS_harmony/Codebase/trunk/frameworks/powernap/examples/hello_world/ProtectedWorldResource.cfc
+END
+WorldRepresentation.cfc
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/dkiDev/!svn/ver/1190/LCMS_harmony/Codebase/trunk/frameworks/powernap/examples/hello_world/WorldRepresentation.cfc
+END
+HelloWorld.cfc
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/dkiDev/!svn/ver/1190/LCMS_harmony/Codebase/trunk/frameworks/powernap/examples/hello_world/HelloWorld.cfc
+END
+coldspring-config.xml
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/dkiDev/!svn/ver/1190/LCMS_harmony/Codebase/trunk/frameworks/powernap/examples/hello_world/coldspring-config.xml
+END
+WorldResource.cfc
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/dkiDev/!svn/ver/1190/LCMS_harmony/Codebase/trunk/frameworks/powernap/examples/hello_world/WorldResource.cfc
+END
+index.cfm
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/dkiDev/!svn/ver/1190/LCMS_harmony/Codebase/trunk/frameworks/powernap/examples/hello_world/index.cfm
+END
+MyBasicAuthenticator.cfc
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/dkiDev/!svn/ver/1190/LCMS_harmony/Codebase/trunk/frameworks/powernap/examples/hello_world/MyBasicAuthenticator.cfc
+END
+Application.cfc
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/dkiDev/!svn/ver/1190/LCMS_harmony/Codebase/trunk/frameworks/powernap/examples/hello_world/Application.cfc
+END
+api.cfm
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/dkiDev/!svn/ver/1190/LCMS_harmony/Codebase/trunk/frameworks/powernap/examples/hello_world/api.cfm
+END
+ColdspringDrivenResource.cfc
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/dkiDev/!svn/ver/1190/LCMS_harmony/Codebase/trunk/frameworks/powernap/examples/hello_world/ColdspringDrivenResource.cfc
+END
+ProtectedWorldRepresentation.cfc
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/dkiDev/!svn/ver/1190/LCMS_harmony/Codebase/trunk/frameworks/powernap/examples/hello_world/ProtectedWorldRepresentation.cfc
+END

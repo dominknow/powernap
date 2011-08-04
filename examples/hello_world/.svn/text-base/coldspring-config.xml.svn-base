@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+	
+	<bean id="coldspringDrivenResource" class="powernap.examples.hello_world.ColdspringDrivenResource">
+		<property name="representation">
+			<ref bean="worldRepresentation" />
+		</property>
+		<property name="world">
+			<ref bean="world" />
+		</property>
+	</bean>
+
+	<bean id="worldRepresentation" class="powernap.examples.hello_world.WorldRepresentation" singleton="false" />
+	<bean id="world" class="powernap.examples.hello_world.World" singleton="false" />
+	
+</beans>

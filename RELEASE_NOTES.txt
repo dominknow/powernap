@@ -1,0 +1,62 @@
+0.9.1
+* Eliminate unnecessary body/content conversion attempts for GETs and standard FORM posts. vfive
+* Fixed a bug in the 'authenticate' method that was not correctly attempting to reference a ColdSpring-managed bean declared as an authenticator in the extended engine. bcarr
+* Application.cfc file now included in the /examples/hello_world/ directory. bcarr
+* Add documentation note regarding hack for JSONP implementation. vfive
+* Fixed non-thread-safe code, eliminating issues that were causing race-conditions (proper var'ing). vfive and bcarr
+* Added a 'bootstrapper' configuration option supported by the endpoints.cfm custom tag.  This will allow developers to initialize their application by providing an object responsible for any app set-up.  Documentation has also been updated. bcarr
+
+0.9.0
+* BIG Thanks to Brian Ghidinelli for providing MOST of the fixes / enhancements that are
+	included in this latest release. 
+* Bug fixes for PUT and DELETE operations - can now convert PUT/DELETE content bodies 
+	to a key arguments.resource.  May need further adjustment to accomodate file uploads.
+* Added feature that allows protected Resource to reference the username that was passed into
+	the header via <cfargument name="auth_username" />.
+* Changed default response from application/xml to text/xml.
+* Changed API attribute "reload" value to "true" so that switching back and forth between
+	ColdSpring and non-Coldspring managed resources will not throw an error.
+* Various whitespace-content bugs fixed.
+* Added support for HTTP Accept header to specify format, defined in the same way as other formats:
+	format().withExtension("application/vnd.pukkasoft+xml").willRespondWith("application/xml").calls("getAsXML")
+	(even though 'withExtension' isn't completely accurate in its description.)
+* Fixed bug in URL Matcher RegExp that was preventing URIs like:
+	/payments/[uuid].xml from picking up the ".xml".
+* Added Kevin Miller's xml/json/cf conversion utils library with his permission, integrated it into Engine.cfc.
+* Automatic conversion from XML/JSON to an argument collection.  
+	Now if you send a JSON/XML representation as the body of a PUT/POST/DELETE, 
+	we will automatically deserialize and convert it to arguments so it behaves 
+	just like a POST with application/x-www-form-urlencoded.  
+	Your resources can expect arguments.* instead of an arbitrary arguments.resource.
+* Now returns a 415 Unsupported Media Type when the format requested is not a valid 
+	representation for a resource.
+* Changed Representation.cfc to return 415 Unsupported Media Type instead of throwing 
+	a powernap.core.Representation.AbstractCallException.  Also added onMissingMethod 
+	to return a 415 for any other representation methods that don't exist.
+* Added support for tunnelling PUT/DELETE requests via POST by adding a URL parameter 
+	_method=PUT|DELETE.
+* Updated documentation to give examples and document new features.  
+	Added attribution for ConversionUtils.cfc.
+* Improve RegExp for authentication so we can include punctuation characters in 
+	usernames/passwords.  I believe the only requirement is that a : is not included so 
+	the RegExp now supports that.  Also peeled off the method ("Basic" in this version) 
+	in case someone wants to do something more complex in the future.  
+	Updated example in hello_world to match.
+* Removed read-only CFLOCK on 'endpoints.cfm'.
+* Fix Hello World examples not working by improving content-negotiation support.  
+	Now supports Accept headers with a list of possible content-types and (optional) 
+	preferences.  Changed the order of priority to have URL .xml or .json trump the Accept 
+	header.  This is necessary for browser-based examples to work which always send 
+	a (potentially non-optimal for REST) Accept header.
+* Fixed a bug with simpleRepresentation() so that developers no longer have to indicate
+	a '.txt' format when returning SimpleRepresentation.  
+
+0.8.5
+* Changed the .json format content-type to application/json in accordance with RFC 4627 http://www.ietf.org/rfc/rfc4627.txt?number=4627
+* Changed the hello_world example api endpoints file so that the engine isn't reloaded on each request; reload="false", which will give the example improved performance.
+* Added more documentation within the "other goodies" section detailing other beneficial features.
+* Cleaned up and clarified some of the other already established documentation.
+* Updated README.txt to reflect the correct installation instructions.
+
+0.8.0
+Initial public beta release.
