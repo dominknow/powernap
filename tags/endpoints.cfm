@@ -47,7 +47,6 @@
 				<cfheader name="X-#arguments.header#-Error-SQL-WHERE" value="#cfcatch.where#" />
 			</cfif>
 		</cfif>
-		<cfmodule template="../../bugreport/errorinformation.cfm" error=#cfcatch# />
 		<cfcontent reset="true" /><cfabort />
 	
 	</cffunction>
