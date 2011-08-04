@@ -117,8 +117,7 @@
 		<cfif not runtimeResource.hasResourceReference()>
 			<cfheader statuscode="404" statustext="Not Found" />
 			<cfsetting showdebugoutput="false" />
-			<cfreturn "Not found here" />
-		<cfelse>
+			<cfabort />
 		</cfif>
 		
 		<!--- //
@@ -132,7 +131,6 @@
 				IF authentication was successful.  Otherwise, it will be an empty string.
 			// --->
 			<cfset params["auth_username"] = authenticate(runtimeResource.getResourceReference()) />
-		<cfelse>
 		</cfif>
 		
 		<!--- //
