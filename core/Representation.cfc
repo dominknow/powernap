@@ -11,6 +11,31 @@
 	<cffunction name="getResponseHeaders" access="public" returntype="powernap.core.ResponseHeaders">
 		<cfreturn variables.responseHeaders />
 	</cffunction>
+
+	<cffunction name="withHeader" access="public" returntype="powernap.core.Representation">
+		<cfargument name="name" type="string" required="true" />
+		<cfargument name="value" type="string" required="true" />
+
+		<cfset variables.responseHeaders.addCustom(arguments.name, arguments.value) />
+
+		<cfreturn this />
+	</cffunction>
+
+	<cffunction name="withHeaders" access="public" returntype="powernap.core.Representation">
+		<cfargument name="headers" type="array" required="true" />
+
+		<!--- 
+			We're going to loop through each item in the array and add it one at a time,
+			to ensure they're all valid structures
+		--->
+		<cfset var loopIndex = 1 />
+
+		<cfloop from="1" to="#arrayLen(arguments.headers)#" index="loopIndex">
+			<cfset variables.responseHeaders.addCustom(arguments.headers[loopIndex].name, arguments.headers[loopIndex].value) />
+		</cfloop>
+
+		<cfreturn this />
+	</cffunction>
 	
 	<cffunction name="represents" access="public" returntype="powernap.core.Representation">
 		<cfargument name="object" type="any" required="true" />

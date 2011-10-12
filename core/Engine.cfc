@@ -389,8 +389,9 @@
 		// --->
 		<cfset var format = "" />
 		<cfset var content = "" />
+		<cfset var customHeaders = representation.getResponseHeaders().getCustom() />
+		<cfset var headerIndex = 1 />
 
-		<cflog file="powernap" text="Rendering" />
 		<cftry>
 			<cfset format = getFormatFromExtension(runtimeResource.getRequestedFormat()) />
 			<cfset content = getContent(representation, format) />
@@ -408,6 +409,10 @@
 		<cfheader name="Content-Type" value="#format.respondsWith()#" />
 		<cfheader name="Access-Control" value="allow <*>" /><!--- this allows cross-domain calls; which should potentially be configurable --->
 		<cfheader name="Vary" value="Accept" /><!--- Vary header allows proxies to cache non-standard MIME types --->
+		<cfloop from="1" to="#arrayLen(customHeaders)#" index="headerIndex">
+			<cfheader name="#customHeaders[headerIndex].name#" value="#customHeaders[headerIndex].value#" />
+		</cfloop>
+
 	
 		<cfif not arguments.isDebugMode>
 			<cfsetting showdebugoutput="false" />
