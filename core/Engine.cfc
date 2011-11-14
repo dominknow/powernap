@@ -65,6 +65,11 @@
 		<cfreturn variables.authRegistry />
 	</cffunction>
 	
+	<cffunction name="getComponentDispatcher" access="public" returntype="powernap.core.ComponentDispatcher">
+		<cfreturn variables.componentDispatcher />
+	</cffunction>
+	
+	
 	<cffunction name="format" access="public" returntype="powernap.core.Format">
 		<cfset var format = createObject("component", "powernap.core.Format").init() />
 		<cfset format.setApplicationReference(this) />
@@ -145,13 +150,16 @@
 		<cfreturn render(representation, runtimeResource, arguments.isDebugMode) />
 		
 	</cffunction>
-	
-	<cffunction name="newBasicAuthenticator" access="public" returntype="powernap.core.AuthenticatorShell">
+
+	<cffunction name="newBasicAuthenticator" access="public" returntype="powernap.core.BasicAuthenticator">
 		<cfargument name="name" type="string" required="true" />
-		<cfset var obj = createObject("component", "powernap.core.AuthenticatorShell").init(this) />
-		<cfset obj.setName(trim(arguments.name)) />
+		<cfset var obj = createObject("component", "powernap.core.BasicAuthenticator").init(this) />
+		<cfset variables.authCache[arguments.name] = obj />
+
 		<cfreturn obj />
 	</cffunction>
+
+
 	
 	<cffunction name="getRuntimeResourceFromRequest" access="private" returntype="powernap.core.RuntimeResource" output="true">
 		<cfargument name="httpMethod" type="string" required="true" />
@@ -258,11 +266,7 @@
 	
 		<cfreturn content />
 	</cffunction>
-	
-	<cffunction name="getComponentDispatcher" access="private" returntype="powernap.core.ComponentDispatcher">
-		<cfreturn variables.componentDispatcher />
-	</cffunction>
-	
+
 	<cffunction name="defaultFormat" access="public" returntype="void">
 		<cfargument name="extension" type="string" required="true" />
 		
@@ -320,35 +324,10 @@
 			
 		<cfset var authReference = false />
 		<cfset var componentKey = arguments.resource.getProtectedBy() />
-		<cfset var isAuthenticated = false />
-		<cfset var varmatch = "" />
-		<cfset var credentials = "" />
-		<cfset var username = "" />
-		<cfset var password = "" />
-		<cfset var argStruct = structNew() />
 		<cfset var authString = getPageContext().getRequest().getHeader("Authorization") />
 
 		<cfif not isDefined("authString")>
 			<cfset authString = "" />
-		</cfif>
-		
-		<!--- peel off the "Basic", we might support others in the future --->
-		<cfset argStruct.method = listFirst(authString, " ") />
-		<cfset argStruct.username = "" />
-		<cfset argStruct.password = "" />
-		
-		<cfset varmatch = listLast(authString, " ") />
-		<cfset credentials = ToString(ToBinary(ListLast(varmatch, " "))) />
-
-		<!--- values can have any character except : --->
-		<cfset username = reMatch("([^:]*):", credentials) />
-		<cfset password = reMatch(":([^:]*)", credentials) />
-		
-		<cfif arrayLen(username)>
-			<cfset argStruct.username = replaceNoCase(username[1], ":", "", "ALL") />
-		</cfif>
-		<cfif arrayLen(password)>
-			<cfset argStruct.password = replaceNoCase(password[1], ":", "", "ALL") />
 		</cfif>
 		
 		<!--- // 
@@ -356,27 +335,15 @@
 		// --->
 		<cfif structKeyExists(variables.authCache, componentKey)>
 			<cfset authReference = variables.authCache[componentKey] />
-		<cfelseif hasBeanFactory() and getBeanFactory().containsBean(variables.authRegistry[componentKey])>
-			<cfset authReference = getBeanFactory().getBean(variables.authRegistry[componentKey]) />
+		<cfelseif hasBeanFactory() and getBeanFactory().containsBean(componentKey)>
+			<cfset authReference = getBeanFactory().getBean(componentKey) />
 			<cfset variables.authCache[componentKey] = authReference />
 		<cfelse>
-			<cfset authReference = getComponentDispatcher().run(variables.authRegistry[componentKey], "init", structNew()) />
+			<cfset authReference = getComponentDispatcher().run(componentKey, "init", structNew()) />
 			<cfset variables.authCache[componentKey] = authReference />
 		</cfif>
-		
-		<cfset isAuthenticated = getComponentDispatcher().run(authReference, "isAuthenticated", argStruct) />
-		
-		<cfif not isAuthenticated>
-			<cfheader statuscode="401" />
-			<cfheader name="WWW-Authenticate" value="Basic realm='Invalid Authentication for Resource'" />
-			<cfabort />
-		</cfif>
 
-		<!--- //
-			If we've made it this far, then return
-			the username of the authentication credentials
-		// --->
-		<cfreturn trim(argStruct.username) />
+		<cfreturn authReference.authenticate(authString) />
 	</cffunction>
 	
 	<cffunction name="render" access="private" returntype="string" output="false">
