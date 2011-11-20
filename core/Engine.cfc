@@ -343,7 +343,7 @@
 			<cfset variables.authCache[componentKey] = authReference />
 		</cfif>
 
-		<cfreturn authReference.authenticate(authString) />
+		<cfreturn authReference.authenticate(authString, getPageContext().getRequest()) />
 	</cffunction>
 	
 	<cffunction name="render" access="private" returntype="string" output="false">

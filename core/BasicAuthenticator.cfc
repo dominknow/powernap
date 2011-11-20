@@ -19,6 +19,7 @@
 
 	<cffunction name="authenticate" access="public" output="false" returntype="any">
 		<cfargument name="authString" type="string" required="true">
+		<cfargument name="request" type="any" required="true" hint="The request page context object" />
 		
 		<!--- peel off the "Basic", we might support others in the future --->
 		<cfset var method = listFirst(arguments.authString, " ") />
