@@ -319,7 +319,7 @@
 		This method will return either an empty string if authenticate fails OR
 		the username that was provided in the request header.
 	// --->
-	<cffunction name="authenticate" access="private" returntype="string" output="true">
+	<cffunction name="authenticate" access="private" returntype="any" output="true">
 		<cfargument name="resource" type="powernap.core.ResourceConfiguration" required="true" />
 			
 		<cfset var authReference = false />
