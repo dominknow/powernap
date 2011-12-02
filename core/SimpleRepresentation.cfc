@@ -33,25 +33,13 @@
 	</cffunction>
 	
 	<cffunction name="getAsJSON" access="public" returntype="any">
-		<cfset var returnStruct = StructNew() />
-		<cfset returnStruct["message"] = getObject() />
 
-		<cfreturn serializeJSON(returnStruct) />
+		<cfreturn getObject() />
 	</cffunction>
 	
 	<cffunction name="getAsHTML" access="public" returntype="any">
-		<cfset var returnHTML = "" />
-		<cfsavecontent variable="returnHTML">
-			<cfoutput>
-				<!DOCTYPE html>
-				<html>
-				<head><title>REST Message</title></head>
-				<body><p>#getObject()#</p></body>
-				</html>
-			</cfoutput>
-		</cfsavecontent>
 
-		<cfreturn returnHTML />
+		<cfreturn getObject() />
 	</cffunction>
 	
 	<cffunction name="getAsPDF" access="public" returntype="any">
