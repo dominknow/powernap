@@ -29,12 +29,20 @@
 	<cfset format().withExtension(".json").willRespondWith("application/json; charset=UTF-8").calls("getAsJSON") />
 	<cfset format().withExtension(".pdf").willRespondWith("application/pdf; charset=UTF-8").calls("getAsPDF") />
 
+	<cfset variables.verbose = false />
+
 	<cffunction name="init" access="public" returntype="powernap.core.Engine">
 		
 		<cfthrow type="powernap.core.Engine.InitializationException"
 			message="Cannot directly instantiate the core PowerNap application."
 			detail="You must extend this and provide an init() method with the proper configuration." />
 
+	</cffunction>
+
+	<cffunction name="setVerbose" access="public" returntype="void" output="false">
+		<cfargument name="verbose" type="boolean" required="true" />
+
+		<cfset variables.verbose = arguments.verbose />
 	</cffunction>
 
 	<cffunction name="setBeanFactory" access="public" returntype="void">
@@ -298,18 +306,18 @@
 				 configure both as defaults to support both mechanisms or leave it up to user configuration.
 			  // --->
 		<cfloop list="#arguments.extension#" index="type">
-			<cflog file="powernap" text="Checking #type#" />
 			<!--- // Accept headers can have a preference specified in a format like: 
 					 Accept: text/html; q=1.0, text/*; q=0.8, image/gif; q=0.6, image/jpeg; q=0.6, image/*; q=0.5, */*; q=0.1 
 				  // --->
 			<cfif structKeyExists(variables.formatRegistry, listFirst(type, ";"))>
-				<cflog file="powernap" text="Found #type# for #arguments.extension#" />
 				<cfreturn variables.formatRegistry[arguments.extension] />
 			</cfif>
 		</cfloop>
 
 		<!--- the type requested is not supported --->
-		<cflog file="application" text="caught in getFormatFromExtension, #arguments.extension# doesn't exist in the formatRegistry" />
+		<cfif variables.verbose>
+			<cflog file="application" text="caught in getFormatFromExtension, #arguments.extension# doesn't exist in the formatRegistry" />
+		</cfif>
 		<cfheader statuscode="415" statustext="Unsupported Media Type: #arguments.extension#" />
 		<cfabort />
 		
@@ -363,7 +371,9 @@
 			<cfset format = getFormatFromExtension(runtimeResource.getRequestedFormat()) />
 			<cfset content = getContent(representation, format) />
 			<cfcatch type="any">
-				<cflog file="powernap" text="Error! #cfcatch.message#" />
+				<cfif variables.verbose>
+					<cflog file="powernap" text="Error! #cfcatch.message#" />
+				</cfif>
 				<cfrethrow />
 			</cfcatch>
 		</cftry>
