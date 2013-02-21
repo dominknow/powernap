@@ -46,6 +46,9 @@
 			<cfif structKeyExists(cfcatch, "where")>
 				<cfheader name="X-#arguments.header#-Error-SQL-WHERE" value="#cfcatch.where#" />
 			</cfif>
+			<cfif structKeyExists(cfcatch, "tagContext")>
+				<cfheader name="X-#arguments.header#-Error-Tag-Context" value="#serializeJSON(cfcatch.tagContext)#" />
+			</cfif>
 		</cfif>
 		<cfcontent reset="true" /><cfabort />
 	
