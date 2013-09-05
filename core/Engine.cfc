@@ -398,5 +398,42 @@
 		<!--- // Send the content to the client // --->
 		<cfreturn content />
 	</cffunction>
-
+	
+	<cffunction name="returnError">
+		<cfargument name="status" type="numeric" required="false" default="500" />
+		<cfargument name="header" type="string" required="false" default="#attributes.name#" />
+		<cfargument name="error" type="any" required="true" />
+		<cfargument name="cfcatch" type="any" required="true" />
+		<cfargument name="debug" type="boolean" default="false" />
+		
+		<cfset var msg = "" />
+	
+		<cfswitch expression="#arguments.status#">
+			<cfcase value="500"><cfset msg = "Internal Server Error" /></cfcase>
+			<cfcase value="502"><cfset msg = "Bad Gateway" /></cfcase>
+			<cfcase value="503"><cfset msg = "Service Unavailable" /></cfcase>
+		</cfswitch>
+	
+		<!--- // provide stock headers for all responses // --->
+		<cfheader statuscode="#arguments.status#" statustext="#msg#" />
+		<cfheader name="X-#arguments.header#-Error" value="#arguments.cfcatch.message#" />
+	
+		<!--- // provide optional detail // --->
+		<cfif attributes.debug>
+			<cfheader name="X-#arguments.header#-Error-Detail" value="#arguments.cfcatch.detail#" />
+			<cfif structKeyExists(arguments.cfcatch, "TagContext") AND isArray(arguments.cfcatch.TagContext) AND arrayLen(arguments.cfcatch.TagContext)>
+				<cfheader name="X-#arguments.header#-Error-Location" value="#arguments.cfcatch.TagContext[1].Template# (Line #arguments.cfcatch.TagContext[1].Line#)" />
+			</cfif>
+			<cfif structKeyExists(arguments.cfcatch, "sql")>
+				<cfheader name="X-#arguments.header#-Error-SQL" value="#arguments.cfcatch.sql#" />
+			</cfif>
+			<cfif structKeyExists(arguments.cfcatch, "where")>
+				<cfheader name="X-#arguments.header#-Error-SQL-WHERE" value="#arguments.cfcatch.where#" />
+			</cfif>
+			<cfif structKeyExists(arguments.cfcatch, "tagContext")>
+				<cfheader name="X-#arguments.header#-Error-Tag-Context" value="#serializeJSON(arguments.cfcatch.tagContext)#" />
+			</cfif>
+		</cfif>
+		<cfcontent reset="true" /><cfabort />	
+	</cffunction>
 </cfcomponent>

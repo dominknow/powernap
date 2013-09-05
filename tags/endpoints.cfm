@@ -21,37 +21,15 @@
 		<cfargument name="status" type="numeric" required="false" default="500" />
 		<cfargument name="header" type="string" required="false" default="#attributes.name#" />
 		<cfargument name="error" type="any" required="true" />
-		
-		<cfset var msg = "" />
-	
-		<cfswitch expression="#arguments.status#">
-			<cfcase value="500"><cfset msg = "Internal Server Error" /></cfcase>
-			<cfcase value="502"><cfset msg = "Bad Gateway" /></cfcase>
-			<cfcase value="503"><cfset msg = "Service Unavailable" /></cfcase>
-		</cfswitch>
-	
-		<!--- // provide stock headers for all responses // --->
-		<cfheader statuscode="#arguments.status#" statustext="#msg#" />
-		<cfheader name="X-#arguments.header#-Error" value="#cfcatch.message#" />
-	
-		<!--- // provide optional detail // --->
-		<cfif attributes.debug>
-			<cfheader name="X-#arguments.header#-Error-Detail" value="#cfcatch.detail#" />
-			<cfif structKeyExists(cfcatch, "TagContext") AND isArray(cfcatch.TagContext) AND arrayLen(cfcatch.TagContext)>
-				<cfheader name="X-#arguments.header#-Error-Location" value="#cfcatch.TagContext[1].Template# (Line #cfcatch.TagContext[1].Line#)" />
-			</cfif>
-			<cfif structKeyExists(cfcatch, "sql")>
-				<cfheader name="X-#arguments.header#-Error-SQL" value="#cfcatch.sql#" />
-			</cfif>
-			<cfif structKeyExists(cfcatch, "where")>
-				<cfheader name="X-#arguments.header#-Error-SQL-WHERE" value="#cfcatch.where#" />
-			</cfif>
-			<cfif structKeyExists(cfcatch, "tagContext")>
-				<cfheader name="X-#arguments.header#-Error-Tag-Context" value="#serializeJSON(cfcatch.tagContext)#" />
-			</cfif>
-		</cfif>
-		<cfcontent reset="true" /><cfabort />
-	
+		<cfscript>
+			if(!structKeyExists(variables, "app")){
+				variables.app = createObject("component", attributes.engine).init();
+			}
+			local.errorArgs = arguments;
+			local.errorArgs.cfcatch = cfcatch;
+			local.errorArgs.debug = attributes.debug;
+			variables.app.returnError(argumentCollection=local.errorArgs);
+		</cfscript>
 	</cffunction>
 
 </cfsilent>
